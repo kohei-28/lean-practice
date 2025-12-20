@@ -18,3 +18,24 @@ example (h : a ≤ b) : log (1 + exp a) ≤ log (1 + exp b) := by
   apply log_le_log h₀
   apply add_le_add_left
   apply exp_le_exp.2 h
+
+
+theorem h1 : 2*a*b ≤ a^2 + b^2 := by
+  have h : 0 ≤ a^2 - 2*a*b + b^2
+  calc
+    a^2 - 2*a*b + b^2 = (a - b)^2 := by ring
+    _ ≥ 0 := by apply pow_two_nonneg
+  linarith
+
+theorem h2 : -2*a*b ≤ a^2 + b^2 := by
+  have h : 0 ≤ a^2 + 2*a*b + b^2
+  calc
+    a^2 + 2*a*b + b^2 = (a + b)^2 := by ring
+    _ ≥ 0 := by apply pow_two_nonneg
+  linarith
+
+example : |a*b| ≤ (a^2 + b^2)/2 := by
+  apply abs_le'.mpr
+  constructor
+  linarith [h1 a b]
+  linarith [h2 a b]
