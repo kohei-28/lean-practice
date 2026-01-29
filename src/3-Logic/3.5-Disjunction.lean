@@ -80,3 +80,24 @@ theorem abs_lt : |x| < y ↔ -y < x ∧ x < y := by
     exact h₂
   rw [abs_of_neg h]
   linarith
+
+example {z : ℝ} (h : ∃ x y, z = x ^ 2 + y ^ 2 ∨ z = x ^ 2 + y ^ 2 + 1) : z ≥ 0 := by
+  rcases h with ⟨x, y, rfl|rfl⟩
+  · linarith [sq_nonneg x, sq_nonneg y]
+  linarith [sq_nonneg x, sq_nonneg y]
+
+example {x : ℝ} (h : x ^ 2 = 1) : x = 1 ∨ x = -1 := by
+  have h: (x - 1) = 0 ∨ (x + 1) = 0:= by
+    apply eq_zero_or_eq_zero_of_mul_eq_zero
+    linarith
+  rcases h with h'|h'
+  · left; linarith
+  right; linarith
+
+example {x y : ℝ} (h : x ^ 2 = y ^ 2) : x = y ∨ x = -y := by
+  have h: (x - y) = 0 ∨ (x + y) = 0:= by
+    apply eq_zero_or_eq_zero_of_mul_eq_zero
+    linarith
+  rcases h with h'|h'
+  · left; linarith
+  right; linarith
