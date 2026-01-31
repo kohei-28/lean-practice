@@ -101,3 +101,50 @@ example {x y : ℝ} (h : x ^ 2 = y ^ 2) : x = y ∨ x = -y := by
   rcases h with h'|h'
   · left; linarith
   right; linarith
+
+example (h : x ^ 2 = 1) : x = 1 ∨ x = -1 := by
+  have h: (x - 1) = 0 ∨ (x + 1) = 0:= by
+    apply eq_zero_or_eq_zero_of_mul_eq_zero
+    rw[mul_add, sub_mul, sub_mul, one_mul, mul_one, one_mul]
+    ring
+    rw [h]
+    ring
+  rcases h with h'|h'
+  · left
+    rw [sub_eq_zero] at h'
+    exact h'
+  right
+  rw [add_eq_zero_iff_eq_neg] at h'
+  exact h'
+
+
+example (h : x ^ 2 = y ^ 2) : x = y ∨ x = -y := by
+  have h: (x - y) = 0 ∨ (x + y) = 0:= by
+    apply eq_zero_or_eq_zero_of_mul_eq_zero
+    ring
+    rw [<- sub_eq_zero] at h
+    exact h
+  rcases h with h'|h'
+  · left
+    rw [sub_eq_zero] at h'
+    exact h'
+  right
+  rw [add_eq_zero_iff_eq_neg] at h'
+  exact h'
+
+example (P Q : Prop) : P → Q ↔ ¬P ∨ Q := by
+  constructor
+  · intro h
+    by_cases h': P
+    · right
+      apply h h'
+    left
+    apply h'
+  intro h
+  rcases h with h'|h'
+  · by_cases h'': Q
+    · intro hP
+      exact h''
+    contrapose
+    intro hQ; exact h'
+  intro hP; exact h'
